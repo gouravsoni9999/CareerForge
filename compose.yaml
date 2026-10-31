@@ -3,7 +3,6 @@ services:
   db:
     image: postgres:17-alpine
     container_name: careerforge-db
-
     restart: unless-stopped
 
     environment:
@@ -25,6 +24,31 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    container_name: careerforge-backend
+    restart: unless-stopped
+
+    env_file:
+      - .env
+    
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+
+    ports:
+      - "127.0.0.1:8000:8000"
+    
+    depends_on:
+      db:
+        condition: service_healthy
+
+    command: >
+      sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
 volumes:
   postgres_data:

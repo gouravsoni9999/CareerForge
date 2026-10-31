@@ -49,6 +49,27 @@ services:
 
     command: >
       sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+  
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    
+    container_name: careerforge-frontend
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:5173:5173"
+
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+
+    depends_on:
+      - backend
+    
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
 volumes:
   postgres_data:

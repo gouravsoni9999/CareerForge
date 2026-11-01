@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     # Local apps
     "core",
     "accounts",
+    "profiles",
 ]
 
 MIDDLEWARE = [

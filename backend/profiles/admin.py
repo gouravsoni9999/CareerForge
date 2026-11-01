@@ -26,7 +26,8 @@ class StudentProfileAdmin(admin.ModelAdmin):
 @admin.register(RecruiterProfile)
 class RecruiterProfileAdmin(admin.ModelAdmin):
     list_display = (
-        "user", "designation", "phone_number",
+        "user", "company" , "designation", "phone_number",
     )
 
-    search_fields = ("user_email", "designation")
+    search_fields = ("user__email","company__email", "designation")
+    list_filter = ("company",)

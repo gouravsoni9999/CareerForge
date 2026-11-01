@@ -63,6 +63,8 @@ class RecruiterProfile(models.Model):
         related_name="recruiter_profile",
     )
 
+    company = models.ForeignKey("companies.Company", on_delete=models.SET_NULL, null=True, blank=True, related_name="recruiters",)
+
     phone_number = models.CharField(
         max_length=15,
         blank=True,

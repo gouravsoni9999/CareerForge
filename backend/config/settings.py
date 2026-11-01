@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "corsheaders",
     # Local apps
     "core",
+    "accounts",
 ]
 
 MIDDLEWARE = [
@@ -177,3 +178,5 @@ EMAIL_BACKEND = "django.cors.mail.backends.console.EmailBackend"
 
 # Default Primary Key
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "accounts.User" # tells django to use our custom model for authentication

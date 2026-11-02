@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import StudentProfile, RecruiterProfile
 
+
 # Register your models here.
 @admin.register(StudentProfile)
 class StudentProfileAdmin(admin.ModelAdmin):
@@ -23,11 +24,15 @@ class StudentProfileAdmin(admin.ModelAdmin):
         "branch",
     )
 
+
 @admin.register(RecruiterProfile)
 class RecruiterProfileAdmin(admin.ModelAdmin):
     list_display = (
-        "user", "company" , "designation", "phone_number",
+        "user",
+        "company",
+        "designation",
+        "phone_number",
     )
 
-    search_fields = ("user__email","company__email", "designation")
+    search_fields = ("user__email", "company__name", "designation")
     list_filter = ("company",)

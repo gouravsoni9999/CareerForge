@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import StudentProfile, RecruiterProfile
+from .models import StudentProfile, RecruiterProfile, Resume
 
 
 # Register your models here.
@@ -14,7 +14,7 @@ class StudentProfileAdmin(admin.ModelAdmin):
     )
 
     search_fields = (
-        "user_email",
+        "user__email",
         "college_name",
         "branch",
     )
@@ -36,3 +36,32 @@ class RecruiterProfileAdmin(admin.ModelAdmin):
 
     search_fields = ("user__email", "company__name", "designation")
     list_filter = ("company",)
+
+@admin.register(Resume)
+class ResumeAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "student",
+        "title",
+        "is_primary",
+        "uploaded_at",
+    )
+
+    search_fields = (
+        "student__user__email",
+        "title",
+    )
+
+    list_filter = (
+        "is_primary",
+        "uploaded_at",
+    )
+
+    readonly_fields = (
+        "uploaded_at",
+        "updated_at",
+    )
+
+    autocomplete_fields = (
+        "student",
+    )

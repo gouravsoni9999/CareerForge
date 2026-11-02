@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "profiles",
     "opportunities",
     "applications",
+    "skills",
 ]
 
 MIDDLEWARE = [
@@ -183,4 +184,9 @@ EMAIL_BACKEND = "django.cors.mail.backends.console.EmailBackend"
 # Default Primary Key
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = "accounts.User" # tells django to use our custom model for authentication
+AUTH_USER_MODEL = (
+    "accounts.User"  # tells django to use our custom model for authentication
+)
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"

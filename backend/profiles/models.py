@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
+from .validators import validate_resume_file
 
 # Create your models here.
 class StudentProfile(models.Model):
@@ -81,3 +82,26 @@ class RecruiterProfile(models.Model):
     def __str__(self):
         return f"Recruiter profile: {self.user.email}"
 
+class Resume(models.Model):
+    student = models.ForeignKey("profiles.StudentProfile", on_delete=models.CASCADE, related_name="resumes")
+
+    title = models.CharField(
+        max_length=150,
+        default="My Resume",
+    )
+
+    file = models.FileField(
+        upload_to="resumes/%Y/%m/",
+        validators=[validate_resume_file],
+    )
+
+    is_primary = models.BooleanField(default=False)
+
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-uploaded_at"]
+
+    def __str__(self):
+        return f"{self.student.user.email} - {self.title}"

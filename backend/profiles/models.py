@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from .validators import validate_resume_file
+from django.db.models import Q
+
 
 # Create your models here.
 class StudentProfile(models.Model):
@@ -57,6 +59,7 @@ class StudentProfile(models.Model):
     def __str__(self):
         return f"Student profile: {self.user.email}"
 
+
 class RecruiterProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -64,7 +67,13 @@ class RecruiterProfile(models.Model):
         related_name="recruiter_profile",
     )
 
-    company = models.ForeignKey("companies.Company", on_delete=models.SET_NULL, null=True, blank=True, related_name="recruiters",)
+    company = models.ForeignKey(
+        "companies.Company",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="recruiters",
+    )
 
     phone_number = models.CharField(
         max_length=15,
@@ -82,8 +91,11 @@ class RecruiterProfile(models.Model):
     def __str__(self):
         return f"Recruiter profile: {self.user.email}"
 
+
 class Resume(models.Model):
-    student = models.ForeignKey("profiles.StudentProfile", on_delete=models.CASCADE, related_name="resumes")
+    student = models.ForeignKey(
+        "profiles.StudentProfile", on_delete=models.CASCADE, related_name="resumes"
+    )
 
     title = models.CharField(
         max_length=150,
@@ -102,6 +114,14 @@ class Resume(models.Model):
 
     class Meta:
         ordering = ["-uploaded_at"]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["student"],
+                condition=Q(is_primary=True),
+                name="unique_primary_resume_per_student",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.student.user.email} - {self.title}"

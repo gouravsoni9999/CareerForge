@@ -26,12 +26,17 @@ export async function apiRequest<T>(
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
-        const message =
-            data?.detail ||
-            data?.email?.[0] ||
-            data?.password?.[0] ||
-            data?.non_field_errors?.[0] ||
-            "Something went wrong. Please try again.";
+        let message = "Something went wrong. Please try again.";
+
+        if (typeof data?.detail === "string") {
+            message = data.detail;
+        } else if (data && typeof data === "object") {
+            const firstError = Object.values(data).flat(Infinity)[0];
+
+            if (typeof firstError === "string") {
+                message = firstError;
+            }
+        }
 
         throw new Error(message);
     }

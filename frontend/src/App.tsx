@@ -7,6 +7,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import StudentProfilePage from "./pages/StudentProfilePage";
+import StudentResumesPage from "./pages/StudentResumesPage";
 
 import "./App.css";
 
@@ -59,6 +61,8 @@ function AppRoutes() {
 
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/student/profile" element={<StudentProfilePage />} />
+        <Route path="/student/resumes" element={<StudentResumesPage />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

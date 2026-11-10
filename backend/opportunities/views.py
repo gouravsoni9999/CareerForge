@@ -1,14 +1,23 @@
 from django.db.models import Q
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Opportunity
 from .serializers import (
     OpportunityListSerializer,
     OpportunityDetailSerializer,
+    RecruiterOpportunitySerializer,
 )
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from accounts.permissions import IsRecruiter
+from applications.models import Application
+from applications.serializers import ApplicationSerializer
 
 
 class OpportunityListView(generics.ListAPIView):
@@ -129,4 +138,103 @@ class OpportunityDetailView(generics.RetrieveAPIView):
             .select_related(
                 "company",
             )
+        )
+
+
+class RecruiterOpportunityListCreateView(generics.ListCreateAPIView):
+    serializer_class = RecruiterOpportunitySerializer
+    permission_classes = [IsAuthenticated, IsRecruiter]
+
+    def get_queryset(self):
+        return Opportunity.objects.filter(
+            posted_by=self.request.user.recruiter_profile
+        ).select_related("company", "posted_by")
+
+    def perform_create(self, serializer):
+        recruiter = self.request.user.recruiter_profile
+
+        if not recruiter.company:
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError(
+                "Register a company before creating opportunities."
+            )
+
+        if recruiter.company.verification_status != "VERIFIED":
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError(
+                "Your company must be verified before creating opportunities."
+            )
+
+        serializer.save(
+            company=recruiter.company,
+            posted_by=recruiter,
+        )
+
+
+class RecruiterOpportunityDetailView(generics.RetrieveUpdateAPIView):
+    serializer_class = RecruiterOpportunitySerializer
+    permission_classes = [IsAuthenticated, IsRecruiter]
+    http_method_names = ["get", "patch", "head", "options"]
+
+    def get_queryset(self):
+        return Opportunity.objects.filter(
+            posted_by=self.request.user.recruiter_profile
+        ).select_related("company", "posted_by")
+
+
+class PublishOpportunityView(APIView):
+    permission_classes = [IsAuthenticated, IsRecruiter]
+
+    def post(self, request, pk):
+        recruiter = request.user.recruiter_profile
+
+        opportunity = get_object_or_404(
+            Opportunity,
+            pk=pk,
+            posted_by=recruiter,
+        )
+
+        if not recruiter.company or recruiter.company.verification_status != "VERIFIED":
+            return Response(
+                {"detail": "Your company must be verified before publishing."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if opportunity.status != Opportunity.OpportunityStatus.DRAFT:
+            return Response(
+                {"detail": "Only draft opportunities can be published."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if opportunity.application_deadline < timezone.localdate():
+            return Response(
+                {"detail": "The application deadline has already passed."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        opportunity.status = Opportunity.OpportunityStatus.PUBLISHED
+        opportunity.published_at = timezone.now()
+        opportunity.save(update_fields=["status", "published_at", "updated_at"])
+
+        return Response(
+            RecruiterOpportunitySerializer(opportunity).data,
+            status=status.HTTP_200_OK,
+        )
+
+
+class RecruiterOpportunityApplicationsView(generics.ListAPIView):
+    serializer_class = ApplicationSerializer
+    permission_classes = [IsAuthenticated, IsRecruiter]
+
+    def get_queryset(self):
+        recruiter = self.request.user.recruiter_profile
+
+        return Application.objects.filter(
+            opportunity__posted_by=recruiter,
+            opportunity_id=self.kwargs["pk"],
+        ).select_related(
+            "student",
+            "student__user",
+            "opportunity",
+            "opportunity__company",
         )

@@ -28,6 +28,7 @@ urlpatterns = [
     path("api/", include("skills.urls")),
     path("api/companies/", include("companies.urls")),
     path("api/opportunities/", include("opportunities.urls")),
+    path("api/applications/", include("applications.urls")),
 ]
 
 if settings.DEBUG:

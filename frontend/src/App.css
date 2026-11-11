@@ -1179,3 +1179,155 @@ button {
     grid-column: auto;
   }
 }
+
+
+.recruiter-opportunity-form {
+  display: grid;
+  gap: 17px;
+  margin-top: 25px;
+  padding: 22px;
+  background: #fafaff;
+  border: 1px solid #e8e6ff;
+  border-radius: 10px;
+}
+
+.recruiter-opportunity-form h3,
+.recruiter-opportunity-list h3 {
+  margin: 0 0 8px;
+}
+
+.recruiter-opportunity-form label,
+.recruiter-applicant-controls label {
+  display: grid;
+  gap: 8px;
+  color: #424a5d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.recruiter-opportunity-form input,
+.recruiter-opportunity-form textarea,
+.recruiter-opportunity-form select,
+.recruiter-applicant-controls textarea,
+.recruiter-applicant-controls select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #dfe1e9;
+  border-radius: 8px;
+  background: white;
+  font: inherit;
+}
+
+.recruiter-opportunity-form textarea,
+.recruiter-applicant-controls textarea {
+  resize: vertical;
+}
+
+.recruiter-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.recruiter-opportunity-form button,
+.recruiter-opportunity-actions button,
+.recruiter-applicant-controls button {
+  justify-self: start;
+  padding: 10px 16px;
+  color: white;
+  background: #5d50ce;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.recruiter-opportunity-list {
+  margin-top: 32px;
+}
+
+.recruiter-opportunity-card,
+.recruiter-applicant-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-top: 14px;
+  padding: 20px;
+  border: 1px solid #e7e9f0;
+  border-radius: 10px;
+  background: white;
+}
+
+.recruiter-opportunity-card h4,
+.recruiter-applicant-card h4 {
+  margin: 0 0 8px;
+}
+
+.recruiter-opportunity-card p,
+.recruiter-applicant-card p {
+  color: #777e90;
+  font-size: 13px;
+}
+
+.recruiter-opportunity-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.company-status.draft {
+  color: #8a5b13;
+  background: #fff4dc;
+}
+
+.company-status.published {
+  color: #216b45;
+  background: #eaf8f0;
+}
+
+.company-status.closed,
+.company-status.expired {
+  color: #a32c37;
+  background: #fff0f0;
+}
+
+.recruiter-applicants {
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px solid #e7e9f0;
+}
+
+.recruiter-applicants-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.recruiter-applicant-card {
+  align-items: flex-start;
+}
+
+.recruiter-applicant-controls {
+  display: grid;
+  gap: 12px;
+  width: min(100%, 360px);
+}
+
+@media (max-width: 700px) {
+  .recruiter-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recruiter-opportunity-card,
+  .recruiter-applicant-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .recruiter-applicant-controls {
+    width: 100%;
+  }
+}

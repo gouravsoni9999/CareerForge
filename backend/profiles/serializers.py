@@ -1,16 +1,20 @@
 from rest_framework import serializers
 from .models import StudentProfile, RecruiterProfile
 
+
 class StudentProfileSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(source = "user.email", read_only = True,)
-    first_name = serializers.CharField(source = "user.first_name", read_only = True)
-    last_name = serializers.CharField(source = "user.last_name", read_only = True)
+    email = serializers.EmailField(
+        source="user.email",
+        read_only=True,
+    )
+    first_name = serializers.CharField(source="user.first_name", read_only=True)
+    last_name = serializers.CharField(source="user.last_name", read_only=True)
 
     class Meta:
         model = StudentProfile
 
         fields = (
-             "id",
+            "id",
             "email",
             "first_name",
             "last_name",
@@ -34,6 +38,7 @@ class StudentProfileSerializer(serializers.ModelSerializer):
             "updated_at",
         )
 
+
 class RecruiterProfileSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         source="user.email",
@@ -56,6 +61,12 @@ class RecruiterProfileSerializer(serializers.ModelSerializer):
         default=None,
     )
 
+    company_verification_status = serializers.CharField(
+        source="company.verification_status",
+        read_only=True,
+        default=None,
+    )
+
     class Meta:
         model = RecruiterProfile
 
@@ -66,6 +77,7 @@ class RecruiterProfileSerializer(serializers.ModelSerializer):
             "last_name",
             "company",
             "company_name",
+            "company_verification_status",
             "phone_number",
             "designation",
             "created_at",

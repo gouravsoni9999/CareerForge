@@ -2,6 +2,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { apiRequest } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
+import RecruiterOpportunities from "./RecruiterOpportunities";
 
 type RecruiterProfile = {
   id: number;
@@ -10,6 +11,7 @@ type RecruiterProfile = {
   last_name: string;
   company: number | null;
   company_name: string | null;
+  company_verification_status: "PENDING" | "VERIFIED" | "REJECTED" | null;
   phone_number: string;
   designation: string;
 };
@@ -60,7 +62,7 @@ export default function RecruiterDashboard() {
           ...initialCompany,
           id: data.company,
           name: data.company_name || "Registered company",
-          verification_status: "PENDING",
+          verification_status: data.company_verification_status || "PENDING",
         });
       } else {
         setCompany(null);
@@ -151,10 +153,15 @@ export default function RecruiterDashboard() {
                 </p>
               )}
 
-              {company.verification_status === "VERIFIED" && (
-                <p className="profile-success">
-                  Your company is verified. You can now create opportunities.
-                </p>
+              {company?.verification_status === "VERIFIED" ? (
+                <RecruiterOpportunities />
+              ) : (
+                <section className="recruiter-panel">
+                  <h2>Recruitment workspace</h2>
+                  <div className="recruiter-placeholder">
+                    Complete company verification to unlock opportunity publishing.
+                  </div>
+                </section>
               )}
             </div>
           ) : (

@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 
 from accounts.permissions import IsRecruiter
 from applications.models import Application
-from applications.serializers import ApplicationSerializer
+from applications.serializers_recruiter import RecruiterApplicantSerializer
 
 
 class OpportunityListView(generics.ListAPIView):
@@ -223,7 +223,7 @@ class PublishOpportunityView(APIView):
 
 
 class RecruiterOpportunityApplicationsView(generics.ListAPIView):
-    serializer_class = ApplicationSerializer
+    serializer_class = RecruiterApplicantSerializer
     permission_classes = [IsAuthenticated, IsRecruiter]
 
     def get_queryset(self):

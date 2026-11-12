@@ -67,6 +67,18 @@ class RecruiterProfileSerializer(serializers.ModelSerializer):
         default=None,
     )
 
+    company_industry = serializers.CharField(
+        source="company.industry",
+        read_only=True,
+        default=None,
+    )
+
+    company_location = serializers.CharField(
+        source="company.location",
+        read_only=True,
+        default=None,
+    )
+
     class Meta:
         model = RecruiterProfile
 
@@ -78,6 +90,8 @@ class RecruiterProfileSerializer(serializers.ModelSerializer):
             "company",
             "company_name",
             "company_verification_status",
+            "company_industry",
+            "company_location",
             "phone_number",
             "designation",
             "created_at",
@@ -93,4 +107,6 @@ class RecruiterProfileSerializer(serializers.ModelSerializer):
             "company_name",
             "created_at",
             "updated_at",
+            "company_industry",
+            "company_location",
         )

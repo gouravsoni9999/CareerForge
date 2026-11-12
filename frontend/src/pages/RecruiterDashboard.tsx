@@ -14,6 +14,8 @@ type RecruiterProfile = {
   company_verification_status: "PENDING" | "VERIFIED" | "REJECTED" | null;
   phone_number: string;
   designation: string;
+  company_industry: string | null;
+  company_location: string | null;
 };
 
 type CompanyForm = {
@@ -62,6 +64,8 @@ export default function RecruiterDashboard() {
           ...initialCompany,
           id: data.company,
           name: data.company_name || "Registered company",
+          industry: data.company_industry || "",
+          location: data.company_location || "",
           verification_status: data.company_verification_status || "PENDING",
         });
       } else {

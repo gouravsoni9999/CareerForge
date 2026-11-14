@@ -51,7 +51,7 @@ class Opportunity(models.Model):
         max_length=20, choices=WorkMode.choices, default=WorkMode.ONSITE
     )
     openings = models.PositiveSmallIntegerField(
-        default=1, validators=[MinValueValidator]
+        default=1, validators=[MinValueValidator(1)]
     )
 
     # Compensation(INR)

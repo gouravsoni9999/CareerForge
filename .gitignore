@@ -21,6 +21,7 @@ backend/db.sqlite3
 backend/staticfiles/
 backend/media/
 backend/local_settings.py
+data/
 *.log
 
 # Node.js & Frontend
@@ -36,3 +37,5 @@ npm-debug.log*
 Thumbs.db
 Logs/
 *.log
+# Local database backups
+careerforge_backup.sql

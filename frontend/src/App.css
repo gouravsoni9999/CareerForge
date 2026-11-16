@@ -1331,3 +1331,15 @@ button {
     width: 100%;
   }
 }
+
+.student-modal { max-height: 90vh; overflow-y: auto; }
+.student-modal input:not([type="file"]), .student-modal select {
+  box-sizing: border-box; width: 100%; margin-top: 6px; padding: 10px;
+  border: 1px solid #dfe1e9; border-radius: 8px; font: inherit;
+}
+.apply-resume-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+.apply-resume-tabs button {
+  flex: 1; padding: 8px; border: 1px solid #dfe1e9; border-radius: 8px;
+  background: #fff; cursor: pointer;
+}
+.apply-resume-tabs button.active { background: #111827; color: #fff; }

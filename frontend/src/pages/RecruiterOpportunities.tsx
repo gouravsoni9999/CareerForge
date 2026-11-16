@@ -27,6 +27,13 @@ type Applicant = {
   id: number;
   student_name: string;
   student_email: string;
+  phone: string;
+  course: string;
+  branch: string;
+  cgpa: string | null;
+  cover_letter: string;
+  resume_title: string;
+  resume_url: string | null;
   status: string;
   recruiter_notes: string;
   applied_at: string;
@@ -437,6 +444,25 @@ export default function RecruiterOpportunities() {
   );
 }
 
+async function openResume(url: string, download: boolean, name: string) {
+  const token = localStorage.getItem("access_token");
+  const base = import.meta.env.VITE_API_BASE_URL || "";
+  const res = await fetch(`${base}${url}${download ? "?download=1" : ""}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) return alert("Unable to load resume.");
+  const blobUrl = URL.createObjectURL(await res.blob());
+  if (download) {
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = `${name.replace(/\s+/g, "_")}_resume.pdf`;
+    a.click();
+  } else {
+    window.open(blobUrl, "_blank");
+  }
+  setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+}
+
 function ApplicantRow({
   applicant,
   onUpdate,
@@ -457,9 +483,24 @@ function ApplicantRow({
   return (
     <article className="recruiter-applicant-card">
       <div>
-        <h4>{applicant.student_name || "Student"}</h4>
-        <p>{applicant.student_email}</p>
+        <h4>Name: {applicant.student_name || "Student"}</h4>
+        <p>· Email: {applicant.student_email}</p>
+        <p>· Phone: {applicant.phone}</p>
+        <p>· Course: {applicant.course}</p>
+        <p>· Branch: {applicant.branch}</p>
+        <p>· CGPA: {applicant.cgpa ?? "-"}</p>
         <small>Applied: {new Date(applicant.applied_at).toLocaleDateString()}</small>
+        {applicant.cover_letter && (
+          <details><summary>Cover letter</summary><p>{applicant.cover_letter}</p></details>
+        )}
+        {applicant.resume_url && (
+          <div className="resume-actions">
+            <button type="button" onClick={() => void openResume(applicant.resume_url!, false, applicant.student_name)}>View resume</button>
+            <button type="button" onClick={() => void openResume(applicant.resume_url!, true, applicant.student_name)}>Download</button>
+          </div>
+        )}
+        
+        
       </div>
 
       <div className="recruiter-applicant-controls">

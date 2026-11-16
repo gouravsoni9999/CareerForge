@@ -6,7 +6,7 @@ from .views import (
     StudentApplicationWithdrawView,
 )
 
-from .views_recruiter import RecruiterApplicationStatusView
+from .views_recruiter import RecruiterApplicationStatusView, RecruiterApplicationResumeView
 
 urlpatterns = [
     path(
@@ -18,6 +18,11 @@ urlpatterns = [
         "recruiter/<int:pk>/status/",
         RecruiterApplicationStatusView.as_view(),
         name="recruiter-application-status",
+    ),
+    path(
+        "recruiter/<int:pk>/resume/",
+        RecruiterApplicationResumeView.as_view(),
+        name="recruiter-application-resume",
     ),
     path(
         "<int:pk>/",

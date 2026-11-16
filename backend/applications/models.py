@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 # Create your models here.
@@ -28,6 +29,19 @@ class Application(models.Model):
     # Application Details
     cover_letter = models.TextField(blank=True)
     status = models.CharField(max_length=30, choices=ApplicationStatus.choices, default=ApplicationStatus.APPLIED)
+
+    # Snapshot of the form submitted by the student
+    full_name = models.CharField(max_length=150, blank=True)
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=15, blank=True)
+    course = models.CharField(max_length=100, blank=True)
+    branch = models.CharField(max_length=100, blank=True)
+    cgpa = models.DecimalField(
+        max_digits=4, decimal_places=2, null=True, blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    resume = models.FileField(upload_to="applications/%Y/%m/", blank=True)
+    resume_title = models.CharField(max_length=150, blank=True)
 
     # Internal notes for recruiters/admin
     recruiter_notes = models.TextField(blank=True)
